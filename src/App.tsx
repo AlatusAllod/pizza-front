@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import theme from './style/theme';
+import mainReducer from './store/reducers';
+import createSagaMiddleware from 'redux-saga';
+import mainSaga from './store/sagas';
+import ProductContainer from './components/ProductContainer';
 
-function App() {
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(mainReducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(mainSaga);
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MuiThemeProvider theme={theme}>
+      <CssBaseline>
+        <Provider store={store}>
+          <ProductContainer />
+        </Provider>
+      </CssBaseline>
+    </MuiThemeProvider>
   );
 }
 
